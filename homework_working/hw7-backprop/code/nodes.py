@@ -131,7 +131,7 @@ class L2NormPenaltyNode(object):
         return self.out
     
     def backward(self):
-        d_w = 2 * self.l2_reg * self.w.out
+        d_w = self.d_out * 2 * self.l2_reg * self.w.out
         self.w.d_out += d_w
         return self.d_out
     
@@ -162,8 +162,8 @@ class SumNode(object):
         return self.out
 
     def backward(self):
-        d_a = np.array(1)
-        d_b = np.array(1)
+        d_a = self.d_out * np.array(1)
+        d_b = self.d_out * np.array(1)
         self.a.d_out += d_a
         self.b.d_out += d_b
         return self.d_out

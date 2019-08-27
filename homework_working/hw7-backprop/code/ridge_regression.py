@@ -20,8 +20,11 @@ class RidgeRegression(BaseEstimator, RegressorMixin):
         
         self.prediction = nodes.VectorScalarAffineNode(x=self.x, w=self.w, b=self.b,
                                                  node_name="prediction")
-        
-        self.objective = nodes.SumNode(a=self.prediction, b=self.penalty,
+
+        self.residual = nodes.SquaredL2DistanceNode(a=self.prediction, b=self.y,
+                                               node_name="square loss")
+
+        self.objective = nodes.SumNode(a=self.residual, b=self.penalty,
                                                node_name="sum")
         # TODO
         # Group nodes into types to construct computation graph function

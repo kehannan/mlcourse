@@ -180,6 +180,33 @@ class AffineNode(object):
         b: node for which b.out is a numpy array of shape (m) (i.e. vector of length m)
     """
     ## TODO
+    def __init__(self, W, x, b, node_name):
+        self.node_name = node_name
+        self.out = None
+        self.d_out = None
+        self.W = W
+        self.x = x
+        self.b = b
+
+
+    def forward(self):
+        self.out = np.dot(self.W, self.x.transpose()) + self.b
+        self.d_out = np.zeros(self.out.shape)
+        return self.out
+
+    def backward(self):
+        d_W = np.outer(self.d_out, self.x)
+        d_x = np.dot(self.W.transpose(), self.d_out.transpose())
+        d_b = self.d_out * np.array(1)
+        self.W.d_out += d_W
+        self.x.out += d_x
+        self.b.d_out += d_b
+        return self.d_out
+
+    def get_predecessors(self):
+        return [self.W, self.x, self.b]
+
+
 
 class TanhNode(object):
     """Node tanh(a), where tanh is applied elementwise to the array a
@@ -187,4 +214,23 @@ class TanhNode(object):
         a: node for which a.out is a numpy array
     """
     ## TODO
+    def __init__(self, h, node_name):
+        self.node_name = node_name
+        self.out = None
+        self.d_out = None
+        self.h = h
+
+
+    def forward(self):
+        self.out = np.tanh(h)
+        self.d_out = np.zeros(self.out.shape)
+        return self.out
+
+    def backward(self):
+        d_h = (1- np.tanh(self.h).square()) * self.d_out
+        self.a.d_out += d_h
+        return self.d_out
+
+    def get_predecessors(self):
+            return [self.h]
 

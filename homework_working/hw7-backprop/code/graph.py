@@ -25,6 +25,7 @@ License: Creative Commons Attribution 4.0 International License
 """
 
 import numpy as np
+import pdb
 
 class ComputationGraphFunction:
     def __init__(self, inputs, outcomes, parameters, prediction, objective):
@@ -47,6 +48,7 @@ class ComputationGraphFunction:
         self.name_to_node = {}
         self.name_to_node[self.prediction.node_name] = self.prediction
         self.name_to_node[self.objective.node_name] = self.objective
+
         for node in self.inputs + self.outcomes + self.parameters:
             self.name_to_node[node.node_name] = node
 
@@ -56,12 +58,16 @@ class ComputationGraphFunction:
         self.objective_node_list_backward.reverse()
         self.prediction_node_list_forward = sort_topological(self.prediction)
 
+
+
     def __set_values__(self, node_values):
+
         for node_name in node_values:
             node = self.name_to_node[node_name]
             node.out = node_values[node_name]
 
     def set_parameters(self, parameter_values):
+
         self.__set_values__(parameter_values)
 
     def increment_parameters(self, parameter_steps):
@@ -73,6 +79,7 @@ class ComputationGraphFunction:
         self.__set_values__(input_values)
         self.__set_values__(outcome_values)
         obj = forward_graph(self.objective, node_list=self.objective_node_list_forward)
+        pdb.set_trace()
         return obj
 
     def get_gradients(self, input_values, outcome_values):

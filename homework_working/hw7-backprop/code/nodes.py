@@ -25,6 +25,8 @@ License: Creative Commons Attribution 4.0 International License
 """
 
 import numpy as np
+import pdb
+#pdb.set_trace()  #useful for debugging!
 
 class ValueNode(object):
     """Computation graph node having no input but simply holding a value"""
@@ -61,7 +63,8 @@ class VectorScalarAffineNode(object):
         self.b = b
 
     def forward(self):
-        self.out = np.dot(self.x.out, self.w.out) + self.b.out
+        #pdb.set_trace()
+        self.out = np.dot(self.w.out, self.x.out) + self.b.out
         self.d_out = np.zeros(self.out.shape)
         return self.out
 
@@ -100,10 +103,14 @@ class SquaredL2DistanceNode(object):
         return self.out
 
     def backward(self):
+
         d_a = self.d_out * 2 * self.a_minus_b
         d_b = -self.d_out * 2 * self.a_minus_b
+        pdb.set_trace()
+        self.b.d_out = self.b.d_out + d_b
+        #self.b.d_out += d_b
         self.a.d_out += d_a
-        self.b.d_out += d_b
+        
         return self.d_out
 
     def get_predecessors(self):
@@ -190,7 +197,7 @@ class AffineNode(object):
 
 
     def forward(self):
-        self.out = np.dot(self.W, self.x.transpose()) + self.b
+        self.out = np.dot(self.W.out, self.x.out) + self.b.out
         self.d_out = np.zeros(self.out.shape)
         return self.out
 
@@ -222,12 +229,13 @@ class TanhNode(object):
 
 
     def forward(self):
-        self.out = np.tanh(h)
+        self.out = np.tanh(self.h.out)
         self.d_out = np.zeros(self.out.shape)
+        pdb.set_trace()
         return self.out
 
     def backward(self):
-        d_h = (1- np.tanh(self.h).square()) * self.d_out
+        d_h = (1- np.tanh(self.h.out).square()) * self.d_out
         self.a.d_out += d_h
         return self.d_out
 

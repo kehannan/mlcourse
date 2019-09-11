@@ -27,7 +27,7 @@ class MLPRegression(BaseEstimator, RegressorMixin):
         self.b1 = nodes.ValueNode(node_name='b1') # to hold a vector of biases #1 (m)
         self.W2 = nodes.ValueNode(node_name = 'W2') # to hold a matrix of weights #2 (1 x m)
         self.b2 = nodes.ValueNode(node_name = 'b2') # to hold a scalar bias #2
-
+        
         # Hidden layers
         self.h = nodes.AffineNode(W=self.W1, x=self.x, b=self.b1, node_name = 'h') # to hold the hidden node
         self.a = nodes.TanhNode(h=self.h, node_name='a') # to hold the vector of output from activation function (m)
@@ -40,12 +40,10 @@ class MLPRegression(BaseEstimator, RegressorMixin):
         self.objective = nodes.SquaredL2DistanceNode(a=self.prediction, b=self.y,
                                                node_name="square loss")
 
-       
-
         # Group nodes into types to construct computation graph function
         self.inputs = [self.x]
         self.outcomes = [self.y]
-        self.parameters = [self.W1, self.b1, self.W1, self.b2]
+        self.parameters = [self.W1, self.b1, self.W2, self.b2]
 
         self.graph = graph.ComputationGraphFunction(self.inputs, self.outcomes,
                                                           self.parameters, self.prediction,
@@ -68,7 +66,7 @@ class MLPRegression(BaseEstimator, RegressorMixin):
         self.graph.set_parameters(init_values)
 
         for epoch in range(self.max_num_epochs):
-            shuffle = np.random.permutation(num_instances)
+            shuffle = np.random.permutation(num_instances) # shuffles the order
             epoch_obj_tot = 0.0
             for j in shuffle:
                 obj, grads = self.graph.get_gradients(input_values = {"x": X[j]},

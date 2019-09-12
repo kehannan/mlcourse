@@ -45,7 +45,7 @@ class TestNodes(unittest.TestCase):
         outcome_vals = {"y": np.array(np.random.randn())}
         parameter_vals = {"W1": np.random.standard_normal((num_hidden_units, num_ftrs)),
                           "b1": np.random.standard_normal((num_hidden_units)),
-                          "w2": np.random.standard_normal((num_hidden_units)),
+                          "W2": np.random.standard_normal((num_hidden_units)),
                           "b2": np.array(np.random.randn()) }
 
         max_rel_err = test_utils.test_ComputationGraphFunction(estimator.graph, input_vals, outcome_vals, parameter_vals)

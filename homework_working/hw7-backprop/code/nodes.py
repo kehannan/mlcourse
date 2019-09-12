@@ -230,12 +230,14 @@ class TanhNode(object):
     def forward(self):
         self.out = np.tanh(self.h.out)
         self.d_out = np.zeros(self.out.shape)
+        # pdb.set_trace()
         return self.out
 
     def backward(self):
-        d_h = np.tanh(self.h.out) * np.tanh(self.h.out) * self.d_out
+        tanh_h = self.out
+        d_h = self.d_out * (1 - tanh_h**2)
         self.h.d_out += d_h
-        return self.d_out
+    
 
     def get_predecessors(self):
             return [self.h]

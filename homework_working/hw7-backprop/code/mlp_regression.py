@@ -52,15 +52,16 @@ class MLPRegression(BaseEstimator, RegressorMixin):
     def fit(self, X, y):
         num_instances, num_ftrs = X.shape
         y = y.reshape(-1)
+        s = self.init_param_scale
 
         ## TODO: Initialize parameters (small random numbers -- not all 0, to break symmetry )
 
         # s = self.init_param_scale
         init_values = {
-            "W1": np.zeros((self.num_hidden_units, num_ftrs)),
-            "b1": np.zeros(self.num_hidden_units),
-            "W2": np.zeros((self.num_hidden_units)),
-            "b2": np.array(0.0)}
+            "W1": s * np.random.standard_normal((self.num_hidden_units, num_ftrs)),
+            "b1": s * np.random.standard_normal(self.num_hidden_units),
+            "W2": s * np.random.standard_normal((self.num_hidden_units)),
+            "b2": s * np.array(np.random.randn()) }
 
         self.graph.set_parameters(init_values)
 

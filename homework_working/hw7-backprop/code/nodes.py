@@ -201,10 +201,11 @@ class AffineNode(object):
 
     def backward(self):
         d_W = np.outer(self.d_out, self.x.out)
-        d_x = np.dot(self.W.out.tranpose(), self.d_out.transpose())
+        # pdb.set_trace()
+        d_x = np.dot(self.W.out.T, self.d_out)
         d_b = self.d_out * np.array(1)
         self.W.d_out += d_W
-        self.x.out += d_x
+        self.x.d_out += d_x
         self.b.d_out += d_b
         return self.d_out
 

@@ -52,7 +52,6 @@ class MLPRegression(BaseEstimator, RegressorMixin):
     def fit(self, X, y):
         num_instances, num_ftrs = X.shape
         y = y.reshape(-1)
-        #pdb.set_trace()
 
         ## TODO: Initialize parameters (small random numbers -- not all 0, to break symmetry )
 
@@ -106,7 +105,7 @@ def main():
     # Generate features
     X_train = featurize(x_train)
     X_val = featurize(x_val)
-    # pdb.set_trace()
+
     # Let's plot prediction functions and compare coefficients for several fits
     # and the target function.
 

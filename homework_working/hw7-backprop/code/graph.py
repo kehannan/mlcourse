@@ -79,7 +79,6 @@ class ComputationGraphFunction:
         self.__set_values__(input_values)
         self.__set_values__(outcome_values)
         obj = forward_graph(self.objective, node_list=self.objective_node_list_forward)
-        pdb.set_trace()
         return obj
 
     def get_gradients(self, input_values, outcome_values):

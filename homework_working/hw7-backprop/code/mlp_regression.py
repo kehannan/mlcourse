@@ -60,7 +60,7 @@ class MLPRegression(BaseEstimator, RegressorMixin):
         init_values = {
             "W1": np.zeros((self.num_hidden_units, num_ftrs)),
             "b1": np.zeros(self.num_hidden_units),
-            "W2": np.zeros((1, self.num_hidden_units)),
+            "W2": np.zeros((self.num_hidden_units)),
             "b2": np.array(0.0)}
 
         self.graph.set_parameters(init_values)

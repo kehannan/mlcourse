@@ -63,13 +63,13 @@ class VectorScalarAffineNode(object):
         self.b = b
 
     def forward(self):
-        #pdb.set_trace()
+   
         self.out = np.dot(self.w.out, self.x.out) + self.b.out
         self.d_out = np.zeros(self.out.shape)
         return self.out
 
     def backward(self):
-        d_x = self.d_out * self.w.out
+        d_x = self.d_out * self.w.out 
         d_w = self.d_out * self.x.out
         d_b = self.d_out
         self.x.d_out += d_x
@@ -106,11 +106,9 @@ class SquaredL2DistanceNode(object):
 
         d_a = self.d_out * 2 * self.a_minus_b
         d_b = -self.d_out * 2 * self.a_minus_b
-        pdb.set_trace()
         self.b.d_out = self.b.d_out + d_b
         #self.b.d_out += d_b
         self.a.d_out += d_a
-        
         return self.d_out
 
     def get_predecessors(self):
@@ -202,8 +200,8 @@ class AffineNode(object):
         return self.out
 
     def backward(self):
-        d_W = np.outer(self.d_out, self.x)
-        d_x = np.dot(self.W.transpose(), self.d_out.transpose())
+        d_W = np.outer(self.d_out, self.x.out)
+        d_x = np.dot(self.W.out.tranpose(), self.d_out.transpose())
         d_b = self.d_out * np.array(1)
         self.W.d_out += d_W
         self.x.out += d_x
@@ -231,12 +229,11 @@ class TanhNode(object):
     def forward(self):
         self.out = np.tanh(self.h.out)
         self.d_out = np.zeros(self.out.shape)
-        pdb.set_trace()
         return self.out
 
     def backward(self):
-        d_h = (1- np.tanh(self.h.out).square()) * self.d_out
-        self.a.d_out += d_h
+        d_h = np.tanh(self.h.out) * np.tanh(self.h.out) * self.d_out
+        self.h.d_out += d_h
         return self.d_out
 
     def get_predecessors(self):
